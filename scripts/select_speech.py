@@ -56,7 +56,7 @@ def select(archive,output):
                 'duration_seconds':duration,'source_file':path.name,'transcript':transcripts[utterance],
                 'sha256':hashlib.sha256(data).hexdigest()})
     with (output/'selection.csv').open('w',newline='') as f:
-        writer=csv.DictWriter(f,fieldnames=list(rows[0])); writer.writeheader(); writer.writerows(rows)
+        writer=csv.DictWriter(f,fieldnames=list(rows[0]),lineterminator='\n'); writer.writeheader(); writer.writerows(rows)
     (output/'LICENSE.txt').write_text(licence)
     method={'corpus':'LibriSpeech dev-clean','url':'https://www.openslr.org/resources/12/dev-clean.tar.gz',
         'archive_md5':digest.hexdigest(),'selection_rule':'First 3 numerically sorted eligible speaker IDs per corpus F/M label; first 2 files in archive order of duration 4–10 s per speaker. No codec outcome used.',

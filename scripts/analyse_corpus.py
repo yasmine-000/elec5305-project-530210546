@@ -123,7 +123,7 @@ def regional_metrics(x,y,regions):
 
 def write_csv(path,rows):
     with path.open('w',newline='') as f:
-        writer=csv.DictWriter(f,fieldnames=list(rows[0]));writer.writeheader();writer.writerows(rows)
+        writer=csv.DictWriter(f,fieldnames=list(rows[0]),lineterminator='\n');writer.writeheader();writer.writerows(rows)
 
 
 def condition_plots(x,y,reference_spectra,output,stem,regions):
