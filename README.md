@@ -12,6 +12,11 @@ There are no measured speech results or claims that one codec is better.
 The original proposal PDF is retained as historical context; the revised
 [experiment protocol](docs/protocol.md) describes the current project.
 
+Submission planning: [requirements and checklist](docs/submission-checklist.md),
+[working report template](report/REPORT_TEMPLATE.md), and
+[video outline](docs/video-outline.md). These are not a finished report, recorded
+video, published GitHub Site or Canvas submission.
+
 ## Start in MATLAB Online
 
 1. Sign in at [MATLAB Online](https://matlab.mathworks.com/) with your own
