@@ -36,6 +36,12 @@ unzip('deliverables/matlab_online_data.zip', '.')
 run_real_experiment
 ```
 
+The current entry point also supports running just `run_real_experiment`:
+default paths are resolved beside the function file and the data ZIP is extracted
+on first use if `experiment_data` does not yet exist. Repeated default runs use
+a new timestamped report folder when `results/matlab_real` is already present.
+Explicitly supplied existing output directories remain protected.
+
 The second command runs the eight MATLAB tests, validates reconstruction and
 generates reports for all 12 real utterances / 48 core conditions. Its actual
 MATLAB success has **not** been claimed; Python and Octave execution evidence

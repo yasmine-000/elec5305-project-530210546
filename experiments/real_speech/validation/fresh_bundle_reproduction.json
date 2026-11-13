@@ -1,0 +1,27 @@
+{
+  "data_zip_sha256": "a1e34b8613b0a96d31a95204b1cdff431bd7a93f4815f36b8f91c136ea06535f",
+  "fresh_extraction_only": true,
+  "primary_conditions_recomputed": 48,
+  "metrics_per_condition": 14,
+  "numeric_comparisons": 672,
+  "absolute_tolerance": 1e-09,
+  "maximum_absolute_discrepancy": {
+    "nmse": 0,
+    "si_sdr_db": 0,
+    "stoi": 0,
+    "measured_kbps": 0,
+    "short_log_db": 0,
+    "short_convergence": 0,
+    "short_normalised": 0,
+    "medium_log_db": 0,
+    "medium_convergence": 0,
+    "medium_normalised": 0,
+    "long_log_db": 0,
+    "long_convergence": 0,
+    "long_normalised": 0,
+    "mr_error": 0
+  },
+  "octave_stdout": "GNU Octave 10.3.0: 60 exact-source reconstruction cases passed; max error 1.3322676295501878e-15; invalid NOLA rejected; known waveform/spectral metrics passed.\n",
+  "native_matlab_executed": false,
+  "passed": true
+}

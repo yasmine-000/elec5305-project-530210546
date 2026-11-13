@@ -38,6 +38,14 @@ run_real_experiment('experiment_data/real_codecs','results/matlab_real_2')
 
 If MATLAB fails, retain the exact message/log. The existing Python and Octave
 results remain separately recorded; they must not be labelled MATLAB results.
+
+Simplified startup is now supported: run only `run_real_experiment`. The default
+data/output paths are anchored to the `.m` file's project folder, and a missing
+`experiment_data` directory is populated automatically from the bundled ZIP.
+Existing data is not overwritten automatically. Repeating a default run creates
+a timestamped output folder; explicitly supplied existing output paths are still
+rejected. These native MATLAB entry-point changes are statically reviewed, not
+claimed to have executed under MATLAB.
 Supplemental controls are available as WAVs/CSVs and were analysed in Python;
 the default MATLAB entry point deliberately reports only the four core
 conditions per utterance.

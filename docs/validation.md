@@ -40,7 +40,16 @@ Real-speech experiment subsequently executed on the same date:
   are in `../experiments/real_speech/`. Data ZIP includes actual reference/output
   audio and bitstreams with dataset attribution.
 
-Not yet executed:
+Fresh-bundle reproduction check:
+
+The later fresh-bundle check extracted the published ZIP into a new temporary
+directory and recomputed 14 metrics for each of the 48 primary conditions.
+All **672 values matched the published CSV exactly** in the recorded Python
+environment. The exact `.m` core functions also passed all 60 reconstruction
+cases on this fresh extraction under Octave. See
+`../experiments/real_speech/validation/fresh_bundle_reproduction.json`.
+
+Remaining unexecuted native/other checks:
 
 - `validate_stft`, `run_project_tests`, `demo_project`, report plots
   and corpus aggregation under MATLAB. The local R2025a installation cannot
