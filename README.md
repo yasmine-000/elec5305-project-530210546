@@ -25,8 +25,7 @@ The original proposal PDF is retained as historical context; the revised
 version
 ver signal
 validate_stft                    % Experiment 0: 24 reconstruction cases
-results = runtests('tests/test_core.m');
-assertSuccess(results)
+run_project_tests               % Requires >=8 discovered tests, all passing
 demo_project                    % Synthetic fixture, NOT speech/codec results
 demonstrate_zero_padding         % Physical resolution versus FFT sampling
 ```
@@ -35,15 +34,17 @@ These commands create CSV tables, PNG figures and a Markdown report under
 `results/`. Use a new output directory to rerun a demo/report; existing outputs
 are protected against accidental overwrite.
 
-Requirements: MATLAB R2025a, Signal Processing Toolbox (`iscola`), and optionally
+Requirements: MATLAB R2025a with its JVM enabled (for SHA-256 verification),
+Signal Processing Toolbox (`iscola`), and optionally
 Audio Toolbox (`stoi`). If STOI is unavailable it is explicitly marked
 `NaN`/`unavailable`, never replaced by a fake score. EnCodec runs in Python;
 there is no neural-network training or Python requirement for MATLAB analysis.
 
-**Validation status:** Python/Opus integration tests have run in the development
-environment. MATLAB source has passed a syntax-tree check, but MATLAB tests,
-figure rendering, MATLAB Online operation and pretrained EnCodec inference
-remain unverified. See [validation evidence](docs/validation.md).
+**Validation status:** Python/Opus tests and official pretrained EnCodec round
+trips at both bitrates have run on synthetic fixtures in the development
+environment. MATLAB source has passed a syntax-tree check, but MATLAB numerical
+tests, figure rendering and MATLAB Online operation remain unverified.
+See [validation evidence](docs/validation.md).
 
 ## Prepare real paired codec reconstructions
 
@@ -65,12 +66,13 @@ source .venv/bin/activate
 python -m pip install torch==2.5.1 torchaudio==2.5.1 \
   --index-url https://download.pytorch.org/whl/cpu
 python -m pip install -r scripts/requirements-neural.txt
+export TORCH_HOME="$PWD/.venv/model-cache"
 python scripts/prepare_codecs.py data/speech.wav \
   --output results/codecs/utterance01 --codecs opus encodec --bitrates 6 12
 ```
 
-The neural environment recipe and inference path have not yet been executed
-here. First use requires downloading the official pretrained model from
+The neural environment recipe and four-condition synthetic round trips have
+been exercised here. First use requires downloading the official pretrained model from
 `dl.fbaipublicfiles.com`; use the environment's approved network configuration
 if this destination is blocked. Do not disable TLS verification.
 
@@ -80,6 +82,11 @@ gain for headroom. It records the command and hash, encodes real `.opus` and
 and saves `manifest.json`. No independent decoded gain normalisation, implicit
 time alignment or PCM clipping is applied. Target bitrates are 6 and 12 kb/s;
 measured bitrate includes the full encoded container/header.
+
+The MATLAB analyser recomputes input SHA-256 hashes and rejects mismatches
+against the manifest. Changing a WAV or bitstream requires regenerating the
+corresponding metadata, not reusing a stale manifest. Spectral metrics exclude
+frames whose centres lie outside the actual waveform duration.
 
 The reference and decoded WAVs, bitstreams and manifest must all be copied to
 MATLAB Drive together. Then run:
@@ -161,6 +168,16 @@ Run the Python tests with FFmpeg installed:
 ```bash
 python -m unittest discover -s tests -p 'test_*.py' -v
 ```
+
+The neural test is explicitly skipped by default. With the optional environment
+installed, run all four tests (including real pretrained neural round trips):
+
+```bash
+CODECDIAG_TEST_NEURAL=1 python -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+The [initial code audit](docs/review.md) records discovered problems, fixes and
+the remaining MATLAB execution gap.
 
 Dataset audio, generated reports and model weights are intentionally excluded
 from Git. Never commit account passwords, activation files or private recordings.

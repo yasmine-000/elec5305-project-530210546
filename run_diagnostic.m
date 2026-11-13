@@ -9,7 +9,9 @@ assert(~isfolder(outputDirectory), 'codecdiag:OutputExists', ...
     'Choose a new report directory to preserve previous results.');
 manifest = jsondecode(fileread(manifestFile));
 base = fileparts(manifestFile);
-[x,fs] = audioread(fullfile(base,string(manifest.original)));
+referenceFile = fullfile(base,string(manifest.original));
+referenceHash = codecdiag.check_hash(referenceFile,manifest,'prepared_sha256');
+[x,fs] = audioread(referenceFile);
 assert(fs==24000 && size(x,2)==1 && numel(x)>1 && all(isfinite(x)), ...
     'codecdiag:Source', 'Use finite 24-kHz mono speech, prepared identically for both codecs.');
 assert(sum(x.^2)>eps, 'codecdiag:Silence', 'Reference is silent.');
@@ -22,7 +24,10 @@ mkdir(outputDirectory);
 rows = struct([]); regionRows = struct([]);
 for condition = 1:numel(manifest.conditions)
     entry = manifest.conditions(condition);
-    [y,decodedFs] = audioread(fullfile(base,string(entry.decoded)));
+    validateattributes(entry.nominal_kbps,{'numeric'},{'scalar','real','finite','nonnegative'});
+    decodedFile = fullfile(base,string(entry.decoded));
+    codecdiag.check_hash(decodedFile,entry,'decoded_sha256');
+    [y,decodedFs] = audioread(decodedFile);
     assert(decodedFs==fs && size(y,2)==1 && all(isfinite(y)), ...
         'codecdiag:Decoded', 'Decoded audio must be finite, mono and 24 kHz.');
     delay = fieldOr(entry,'delay_samples',0);
@@ -42,17 +47,30 @@ for condition = 1:numel(manifest.conditions)
     duration = numel(x)/fs;
     bytes = NaN;
     if isfield(entry,'encoded') && strlength(string(entry.encoded))>0
+        codecdiag.check_hash(fullfile(base,string(entry.encoded)),entry,'encoded_sha256');
         file = dir(fullfile(base,string(entry.encoded)));
         assert(numel(file)==1 && ~file.isdir,'codecdiag:EncodedFile','Missing encoded bitstream.');
         bytes = file.bytes;
     end
     encSeconds = fieldOr(entry,'encode_seconds',NaN);
     decSeconds = fieldOr(entry,'decode_seconds',NaN);
+    for seconds = {encSeconds,decSeconds}
+        value = seconds{1};
+        assert(isnumeric(value) && isscalar(value) && isreal(value) && ...
+            (isnan(value) || (isfinite(value) && value>=0)), ...
+            'codecdiag:Runtime','Runtime must be nonnegative seconds or missing/NaN.');
+    end
     machine = "not supplied";
     if isfield(manifest,'machine'), machine = string(jsonencode(manifest.machine)); end
+    environment = struct('ffmpeg',fieldOr(manifest,'ffmpeg_version','not supplied'), ...
+        'systemLibopus',fieldOr(manifest,'system_libopus_version','not supplied'), ...
+        'neural',fieldOr(manifest,'neural_versions',struct()));
+    runtimeComplete = all(isfield(manifest,{'machine','ffmpeg_version','neural_versions','timing_scope'}));
     row = struct('Utterance',string(manifest.utterance), ...
-        'ReferenceSHA256',string(fieldOr(manifest,'prepared_sha256','not supplied')), ...
-        'Machine',machine,'Condition',condition, ...
+        'ReferenceSHA256',referenceHash, ...
+        'Machine',machine,'TimingScope',string(fieldOr(manifest,'timing_scope','not supplied')), ...
+        'RuntimeEnvironment',string(jsonencode(environment)),'RuntimeMetadataComplete',runtimeComplete, ...
+        'Condition',condition, ...
         'Codec',string(entry.codec),'NominalKbps',entry.nominal_kbps, ...
         'MeasuredKbps',8*bytes/duration/1000, ...
         'NominalRateDeviationFraction',abs(8*bytes/duration/1000-entry.nominal_kbps)/max(entry.nominal_kbps,eps), ...
@@ -73,7 +91,8 @@ for condition = 1:numel(manifest.conditions)
         c = configs(k);
         [X,meta] = codecdiag.analyse(x,c);
         Y = codecdiag.analyse(y,c);
-        e = codecdiag.spectral_error(X,Y);
+        keep = codecdiag.frame_mask(meta,c,size(X,2));
+        e = codecdiag.spectral_error(X(:,keep),Y(:,keep));
         prefix = char(c.name);
         row.([prefix 'LogMagnitudeDb']) = e.logMagnitudeDb;
         row.([prefix 'Convergence']) = e.convergence;
@@ -81,7 +100,6 @@ for condition = 1:numel(manifest.conditions)
         bins = 1:floor(c.nfft/2)+1;
         frequencies = (bins-1)*fs/c.nfft/1000;
         times = ((0:size(X,2)-1)*c.hop+c.length/2-meta.padding)/fs;
-        keep = times>=0 & times<=duration;
         A = abs(X(bins,keep)); B = abs(Y(bins,keep));
         scale = max(max(A(:)),eps); floorValue = scale*1e-5;
         panels = {20*log10(max(A,floorValue)/scale), ...
@@ -155,7 +173,7 @@ disp(summary);
 end
 
 function value = fieldOr(entry,name,fallback)
-if isfield(entry,name), value = entry.(name); else, value = fallback; end
+if isfield(entry,name) && ~isempty(entry.(name)), value = entry.(name); else, value = fallback; end
 end
 
 function writeText(path,text)

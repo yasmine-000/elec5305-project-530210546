@@ -37,6 +37,10 @@ hop. Synthesis multiplies inverse-FFT frames by the same window and divides
 the overlap-add signal by the accumulated squared-window weights. All retained
 samples must have positive weights (NOLA). Padding is removed only afterward.
 `iscola(...,'wola')` verifies constant overlap weights for chosen configurations.
+For scoring and visualisation, retain only frames whose centres lie inside
+the actual waveform duration. Boundary support is still zero padded, but
+padding-only frame centres must not dilute log-magnitude averages. Short/long
+regional scores use this same rule.
 
 For reference STFT X and decoded STFT Y at each scale:
 
@@ -78,6 +82,9 @@ removed for external reconstructions, with sample counts recorded. Do not
 cross-correlate each small region to remove codec-induced transient errors.
 The generated codec path requires exact gapless decoded sample counts; investigate
 any mismatch rather than padding to make a metric run.
+Compute each actual input hash before analysis and reject supplied reference,
+decoded or bitstream hashes that disagree. Corpus aggregation also rejects a
+duplicate reference hash under another utterance name.
 
 ## Bitrate and timing
 
@@ -87,6 +94,9 @@ raw codec payload rate. Short clips may substantially exceed requested rates
 because of headers, frame rounding, and padding. Plot measured rates and disclose
 both nominal and measured values; an equal target is not proof of equal measured
 bitrate. Use sufficiently long utterances and flag large measured mismatches.
+Aggregation records abs(Opus rate - EnCodec rate)/mean(the two rates). Differences
+above 10% produce a warning; 10% is a transparent screening threshold, not a
+perceptual-equivalence standard. Missing measured bitstream rates block aggregation.
 
 RTF = (encoding wall seconds + decoding wall seconds) / audio duration. The
 baseline times include subprocess start, model loading from the local cache,
@@ -97,6 +107,9 @@ set to 1; FFmpeg's commands and hardware metadata are recorded. There is no GPU.
 Use the same machine and environment for both codecs; repeat runs to quantify
 timing variation and use long recordings. Do not compare these times directly
 with numbers quoted in papers. CPU cold-cache/startup effects remain limitations.
+Quality/complexity plots require matching host/hardware, Python/tool/codec
+environment metadata and timing scope. Matching metadata cannot remove startup
+or operating-system scheduling effects; report those limitations.
 
 ## Opus neural-enhancement condition
 

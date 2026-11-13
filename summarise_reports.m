@@ -11,14 +11,34 @@ for directory = reportDirectories
     assert(height(T)==4,'codecdiag:Unpaired','Each report needs Opus and EnCodec at 6 and 12 kb/s.');
     assert(numel(unique(T.Utterance))==1 && numel(unique(T.ReferenceSHA256))==1, ...
         'codecdiag:Unpaired','A report must describe the same source utterance.');
+    assert(all(isfinite(T.DurationSeconds) & T.DurationSeconds>0) && numel(unique(T.DurationSeconds))==1, ...
+        'codecdiag:Unpaired','Paired conditions must use the same positive reference duration.');
     for codec = ["opus" "encodec"]
         for bitrate = [6 12]
             assert(sum(T.Codec==codec & T.NominalKbps==bitrate)==1, ...
                 'codecdiag:Unpaired','Missing or duplicate paired codec condition.');
         end
     end
+    assert(all(isfinite(T.MeasuredKbps) & T.MeasuredKbps>0), ...
+        'codecdiag:BitrateMetadata','Corpus comparison requires measured bitstream rates.');
+    T.PairRateDifferenceFraction = zeros(height(T),1);
+    for bitrate = [6 12]
+        paired = T.NominalKbps==bitrate;
+        rates = T.MeasuredKbps(paired);
+        mismatch = abs(diff(rates))/mean(rates);
+        T.PairRateDifferenceFraction(paired) = mismatch;
+        if mismatch>0.10
+            warning('codecdiag:RateMismatch', ...
+                '%s at %g kb/s: measured rates differ by %.1f%%; inspect fairness before conclusions.', ...
+                T.Utterance(1),bitrate,100*mismatch);
+        end
+    end
     assert(~any(ismember(T.Utterance,allRowsName(allRows))), ...
         'codecdiag:Duplicate','An utterance was supplied more than once.');
+    if ~isempty(allRows)
+        assert(~any(ismember(T.ReferenceSHA256,allRows.ReferenceSHA256)), ...
+            'codecdiag:Duplicate','Same reference audio supplied under different utterance names.');
+    end
     allRows = [allRows; T]; %#ok<AGROW>
     regionFile = fullfile(directory,'regions.csv');
     if isfile(regionFile)
@@ -29,7 +49,9 @@ for directory = reportDirectories
 end
 assert(~isempty(allRows),'codecdiag:Empty','No reports supplied.');
 % Runtime comparisons require identical recorded hardware/runtime environment.
-runtimeComparable = numel(unique(allRows.Machine))==1 && all(allRows.Machine~="not supplied");
+runtimeComparable = numel(unique(allRows.Machine))==1 && all(allRows.Machine~="not supplied") && ...
+    numel(unique(allRows.TimingScope))==1 && all(allRows.TimingScope~="not supplied") && ...
+    all(allRows.RuntimeMetadataComplete) && numel(unique(allRows.RuntimeEnvironment))==1;
 metrics = ["NMSE" "SISDRdB" "STOI" "shortLogMagnitudeDb" "mediumLogMagnitudeDb" ...
     "longLogMagnitudeDb" "MultiResolutionError" "RealTimeFactor" "MeasuredKbps"];
 rows = struct([]); count = 0;

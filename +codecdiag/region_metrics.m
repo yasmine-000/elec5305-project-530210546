@@ -10,10 +10,12 @@ for k = 1:numel(regions)
     indices = floor(r.start_seconds*fs)+1:ceil(r.end_seconds*fs);
     a = x(indices); b = y(indices);
     wave = codecdiag.waveform_metrics(a,b);
-    short = codecdiag.spectral_error(codecdiag.analyse(a,configs(1)),codecdiag.analyse(b,configs(1)));
-    long = codecdiag.spectral_error(codecdiag.analyse(a,configs(3)),codecdiag.analyse(b,configs(3)));
+    short = localSpectralError(a,b,configs(1));
+    long = localSpectralError(a,b,configs(3));
     [~,pa] = max(abs(a)); [~,pb] = max(abs(b));
-    A = codecdiag.analyse(a,configs(2)); B = codecdiag.analyse(b,configs(2));
+    [A,meta] = codecdiag.analyse(a,configs(2)); B = codecdiag.analyse(b,configs(2));
+    keep = codecdiag.frame_mask(meta,configs(2),size(A,2));
+    A = A(:,keep); B = B(:,keep);
     bins = (0:floor(configs(2).nfft/2))';
     band = bins*fs/configs(2).nfft >= 4000;
     A = A(bins+1,:); B = B(bins+1,:);
@@ -27,4 +29,10 @@ for k = 1:numel(regions)
         'PeakTimeDifferenceMs',1000*(pb-pa)/fs, ...
         'EnergyRatioDb',energyDb,'Above4kHzEnergyRatioDb',highBandDb);
 end
+end
+
+function metrics = localSpectralError(x,y,config)
+[X,meta] = codecdiag.analyse(x,config); Y = codecdiag.analyse(y,config);
+keep = codecdiag.frame_mask(meta,config,size(X,2));
+metrics = codecdiag.spectral_error(X(:,keep),Y(:,keep));
 end
