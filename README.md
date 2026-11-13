@@ -6,9 +6,10 @@ Research question: *At comparable low bitrates, how do Opus and EnCodec differ
 in their preservation of transient, harmonic and spectral speech information,
 and which STFT resolutions reveal these differences?*
 
-This implements the revised direction in the instructor's feedback. It is an
-initial research software implementation, **not a completed codec comparison**.
-There are no measured speech results or claims that one codec is better.
+This implements the revised direction in the instructor's feedback. An actual
+12-utterance, six-speaker LibriSpeech experiment is now available, with 48 primary
+codec conditions and 24 extra measured-rate-matched Opus controls. Results are
+specific to this small subset; there is no universal codec-quality claim.
 The original proposal PDF is retained as historical context; the revised
 [experiment protocol](docs/protocol.md) describes the current project.
 
@@ -16,6 +17,30 @@ Submission planning: [requirements and checklist](docs/submission-checklist.md),
 [working report template](report/REPORT_TEMPLATE.md), and
 [video outline](docs/video-outline.md). These are not a finished report, recorded
 video, published GitHub Site or Canvas submission.
+
+## Executed real-speech results and ready-to-run data
+
+- [Actual results, controls and limitations](experiments/real_speech/RESULTS.md)
+- [All 48 primary results](experiments/real_speech/all_conditions.csv),
+  [summary](experiments/real_speech/summary.csv),
+  [validation evidence](experiments/real_speech/validation/numerical_parity.json)
+- [MATLAB Online data ZIP](deliverables/matlab_online_data.zip), approximately
+  53 MB, containing real reference/decoded WAVs, actual bitstreams, control
+  outputs, hashes and attribution. **No model download or FFmpeg is needed to
+  analyse this data in MATLAB Online.** See [data instructions](deliverables/README.md).
+
+After uploading/extracting this repository, use its root as MATLAB's current folder:
+
+```matlab
+unzip('deliverables/matlab_online_data.zip', '.')
+run_real_experiment
+```
+
+The second command runs the eight MATLAB tests, validates reconstruction and
+generates reports for all 12 real utterances / 48 core conditions. Its actual
+MATLAB success has **not** been claimed; Python and Octave execution evidence
+is separate. Inspect `results/matlab_real/matlab_run.log` if it fails. An output
+directory already present is protected; use a new path for another run.
 
 ## Start in MATLAB Online
 
@@ -45,10 +70,12 @@ Audio Toolbox (`stoi`). If STOI is unavailable it is explicitly marked
 `NaN`/`unavailable`, never replaced by a fake score. EnCodec runs in Python;
 there is no neural-network training or Python requirement for MATLAB analysis.
 
-**Validation status:** Python/Opus tests and official pretrained EnCodec round
-trips at both bitrates have run on synthetic fixtures in the development
-environment. MATLAB source has passed a syntax-tree check, but MATLAB numerical
-tests, figure rendering and MATLAB Online operation remain unverified.
+**Validation status:** Real speech was processed in Python/SciPy/pystoi. Exact
+repository `.m` core functions ran under GNU Octave: 60 reconstruction cases
+passed, and 432 real-speech numerical comparisons against Python agreed within
+1e-9 (maximum below 8e-13). Five independent analysis tests and the earlier four
+codec tests passed. Native MATLAB test discovery, JVM/toolbox calls and graphics
+remain unverified. Source parsing alone is not numerical evidence.
 See [validation evidence](docs/validation.md).
 
 ## Prepare real paired codec reconstructions
@@ -164,6 +191,7 @@ No statistical significance or codec ranking is assumed in advance.
 | `summarise_reports.m` | Paired-corpus summaries and engineering figures |
 | `demo_project.m` | Deterministic synthetic pipeline fixture |
 | `demonstrate_zero_padding.m` | Two-tone zero-padding demonstration |
+| `run_real_experiment.m` | MATLAB Online test/report entry point for bundled real data |
 | `scripts/prepare_codecs.py` | Standardisation, real codec bitstreams and provenance |
 | `tests/` | MATLAB numerical/report tests and Python/FFmpeg integration tests |
 | `data/README.md` | Speech selection, rights and preparation checklist |
@@ -184,8 +212,26 @@ CODECDIAG_TEST_NEURAL=1 python -m unittest discover -s tests -p 'test_*.py' -v
 The [initial code audit](docs/review.md) records discovered problems, fixes and
 the remaining MATLAB execution gap.
 
-Dataset audio, generated reports and model weights are intentionally excluded
-from Git. Never commit account passwords, activation files or private recordings.
+Python reproduction of the real corpus, after installing the codec and analysis
+requirements in appropriate environments:
+
+```bash
+python scripts/select_speech.py /path/to/dev-clean.tar.gz --output /new/selected_speech
+python scripts/run_corpus.py /new/selected_speech/selection.csv --output /new/real_codecs
+python scripts/analyse_corpus.py /new/real_codecs --output /new/python_reports
+python scripts/rate_matched_control.py /new/real_codecs /new/python_reports --output /new/rate_matched_opus
+python scripts/inband_sensitivity.py /new/real_codecs --matched /new/rate_matched_opus --output /new/inband_sensitivity
+python scripts/check_alignment.py /new/real_codecs --output /new/alignment_checks.csv
+```
+
+Analysis dependencies are pinned in `scripts/requirements-analysis.txt`. Run
+`CODECDIAG_TEST_ANALYSIS=1 python -m unittest discover -s tests -p 'test_analysis.py' -v`
+to check SciPy framing, analytic metric values, STOI identity and hash rejection.
+See the recorded provenance for the exact executed environments and source IDs.
+
+The full corpus, scratch reports and model weights are excluded from Git.
+An attributed small audio bundle and selected real experiment evidence are
+included explicitly. Never commit account passwords, activation files or private recordings.
 
 ## References
 

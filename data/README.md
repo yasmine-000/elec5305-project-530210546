@@ -23,5 +23,10 @@ support a 56-ms window; avoid treating a few milliseconds as harmonic evidence.
 
 Record clipping/overshoot flags, but do not automatically remove a difficult
 codec result. Inspect large nominal/measured bitrate differences on short files.
-Use sufficiently long speech for meaningful runtime comparisons. No speech
-audio is bundled, and the synthetic demo is not a replacement for this dataset.
+Use sufficiently long speech for meaningful runtime comparisons. A separate
+attributed 12-utterance LibriSpeech subset and its codec outputs are now bundled
+in `deliverables/matlab_online_data.zip`; see `experiments/real_speech` for actual
+selection and results. Source audio is 16 kHz and is resampled once to 24 kHz;
+the 8–12-kHz band does not contain original source speech information.
+The bundled automatic regions are explicitly acoustic proxies, not verified
+phonetic labels. The synthetic demo remains separate from real speech results.

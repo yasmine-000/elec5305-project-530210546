@@ -1,0 +1,38 @@
+{
+  "data_zip_sha256": "a1e34b8613b0a96d31a95204b1cdff431bd7a93f4815f36b8f91c136ea06535f",
+  "data_zip_bytes": 53168437,
+  "real_utterances": 12,
+  "speakers": 6,
+  "primary_codec_conditions": 48,
+  "additional_rate_matched_opus_conditions": 24,
+  "octave_reconstruction_cases": 60,
+  "maximum_reconstruction_absolute_error": 1.3322676295501878e-15,
+  "cross_runtime_numeric_comparisons": 432,
+  "parity": {
+    "conditions": 48,
+    "metrics_per_condition": 9,
+    "passed": true,
+    "tolerance_absolute": 1e-09,
+    "maximum_absolute_discrepancy": {
+      "nmse": 4.851674617611934e-14,
+      "si_sdr_db": 3.5083047578154947e-13,
+      "short_log_db": 7.069900220812997e-13,
+      "short_convergence": 2.7400304247748863e-13,
+      "medium_log_db": 7.531752999057062e-13,
+      "medium_convergence": 2.0339285811132868e-13,
+      "long_log_db": 7.904787935331115e-13,
+      "long_convergence": 1.5065726444163374e-13,
+      "mr_error": 1.0491607582707729e-13
+    },
+    "compared_runtimes": "Python/SciPy and exact repository .m functions executed by GNU Octave; NOT MATLAB"
+  },
+  "matlab_execution_verified": false,
+  "python_stoi_implementation": "pystoi 0.4.1",
+  "tested_m_functions": {
+    "analyse.m": "92a0ee1e14de84302594456f968d010838259d3f5eae78a015dbb6c788495e3b",
+    "synthesise.m": "02e6d9a051c9db60d72110eb9f8b96e0c79d256c0bbf7081c404a3ebda68ec13",
+    "spectral_error.m": "542ad21edf994988d732a029f802c9e63be7aa1d6a155b4357421af341c78937",
+    "waveform_metrics.m": "d4233f8d6738ba22adcab637bd524f83b3e9c85a133a9244bbfbc6d2d112058a",
+    "frame_mask.m": "fae072b29ea2f84393de2fb1359311ab5a57e139be59edcd4ec668ac6138b938"
+  }
+}

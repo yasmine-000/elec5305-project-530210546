@@ -1,0 +1,45 @@
+{
+  "selection_rule": "Nearest measured total file bitrate among three adjacent 400-bps CBR settings; no quality metric used.",
+  "trials": [
+    {
+      "requested_bps": 4800,
+      "measured_kbps": 5.6919080919080915
+    },
+    {
+      "requested_bps": 5200,
+      "measured_kbps": 6.093106893106893
+    },
+    {
+      "requested_bps": 5600,
+      "measured_kbps": 6.4943056943056945
+    }
+  ],
+  "chosen_requested_bps": 5200,
+  "encoded_sha256": "7ce711933f8e5038b9dac0be5fb0f6b1ad4c2f414e4eca1cd7187cd34bbbdded",
+  "decoded_sha256": "35ff155ce137315de52c46a0fdb39236c8e984516a0ddc4168dd1af54583d0f2",
+  "result": {
+    "utterance": "1462-170138-0027",
+    "speaker": "1462",
+    "comparison_bandwidth_kbps": 6,
+    "opus_requested_kbps": 5.2,
+    "opus_measured_kbps": 6.093106893106893,
+    "encodec_measured_kbps": 6.117082917082917,
+    "relative_pair_rate_gap": 0.0039272156041366794,
+    "opus_nmse": 0.4255952869106648,
+    "opus_si_sdr_db": 2.340381842248638,
+    "opus_stoi": 0.8855255678166063,
+    "opus_encode_seconds": 0.10628429200005485,
+    "opus_decode_seconds": 0.11586237200026517,
+    "opus_short_log_db": 11.294048616258495,
+    "opus_medium_log_db": 10.656587470394554,
+    "opus_long_log_db": 10.05872462490423,
+    "opus_mr_error": 0.2467695483631623,
+    "encodec_nmse": 0.06862231563744867,
+    "encodec_si_sdr_db": 11.357705644635432,
+    "encodec_stoi": 0.9532896532133078,
+    "encodec_short_log_db": 7.614510259193192,
+    "encodec_medium_log_db": 7.256143271911859,
+    "encodec_long_log_db": 6.709398219117168,
+    "encodec_mr_error": 0.11751257748438322
+  }
+}

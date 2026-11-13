@@ -1,0 +1,12 @@
+{
+  "archive_sha256": "a1e34b8613b0a96d31a95204b1cdff431bd7a93f4815f36b8f91c136ea06535f",
+  "crc_verified": true,
+  "primary_condition_sample_counts_and_sizes_verified": 48,
+  "primary_file_hashes_verified": 108,
+  "additional_selected_source_and_control_hashes_verified": 60,
+  "total_file_hashes_verified": 168,
+  "decoded_primary_samples_at_or_above_full_scale": 0,
+  "actual_rate_matched_controls": 24,
+  "maximum_relative_rate_gap": 0.019205526770293618,
+  "note": "Primary CRC/108 hashes/size/sample checks executed before this additional 60-hash check, on the same archive SHA-256."
+}

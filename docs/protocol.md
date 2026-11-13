@@ -137,9 +137,10 @@ an optional later extension, not part of the initial minimum experiment.
 | Multi-resolution and waveform metrics | `run_diagnostic.m`, SI-SDR/NMSE and optional STOI |
 | Harmonic/transient/fricative comparison | Manually annotated regions, local metrics and plots |
 | Cost, reports, variability and figures | Manifest timings, per-utterance report, `summarise_reports.m` |
-| Real multi-speaker experiment and conclusions | Not yet performed; requires clean speech, EnCodec validation and MATLAB execution |
+| Real multi-speaker experiment and conclusions | 12 utterances / six speakers processed in Python; exact core .m functions cross-checked in Octave; native MATLAB execution and final report discussion still pending |
 
-The current repository intentionally contains no invented result tables,
+Actual real-speech tables/controls are in `../experiments/real_speech/RESULTS.md`.
+The repository intentionally contains no invented result tables,
 speech-quality claims, pretrained weights, copied restricted corpus audio or
 claimed perceptual metric. Synthetic fixtures are labelled as such. A GUI,
 neural Opus extension, very-low-bitrate 3 kb/s condition, trained models and

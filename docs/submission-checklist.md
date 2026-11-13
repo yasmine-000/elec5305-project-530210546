@@ -9,14 +9,14 @@ the submission document defines the deliverables and assessment criteria.
 
 | Requirement | Current status | Remaining action |
 | --- | --- | --- |
-| Working code downloadable from GitHub | Initial implementation pushed; Python codec path tested, MATLAB analysis unexecuted | Run `run_project_tests` in MATLAB Online; fix failures; verify real speech reports and reproduction instructions |
-| Written research report | Template supplied, no completed report | Literature analysis, actual experiments, results, interpretation, references, final document |
+| Working code downloadable from GitHub | Real Python analysis and exact core .m execution under Octave verified; native MATLAB APIs unexecuted | Unzip the bundled data and run `run_real_experiment` in MATLAB Online; fix native failures |
+| Written research report | Template and actual Results/evidence supplied, no final report | Literature analysis, integrate observed results/limitations, interpretation, references, final document |
 | Brief video showing code in action | Not recorded | Record actual execution and explain accomplishments and limitations |
 | Upload report and video to Canvas | Not submitted | Student uploads both final artefacts |
 | GitHub Site containing report and working code | Repository exists; website/Pages not prepared or published | Prepare the site with the final report, code download and reproduction instructions; configure/publish it |
 | Clickable GitHub Site link in report | Pending site URL | Add the real, tested URL before final export |
 | Video link in both report and GitHub Site | Pending video | Add accessible links and test them without the owner's login |
-| Example results available with GitHub code | Synthetic demo generator only; no generated MATLAB examples | Add a small verified example report/figures with provenance and usage rights |
+| Example results available with GitHub code | Actual Python-generated tables/figures and attributable real data bundle supplied | Keep runtime labels accurate; optionally add the verified native MATLAB outputs after running online |
 
 The exact wording asks for a **GitHub Site** as well as downloadable GitHub
 code. Keep website publication as a distinct item; a repository alone should

@@ -1,5 +1,9 @@
 # Initial implementation audit — 13 November 2026
 
+**Historical audit before real-speech execution.** The later actual experiment,
+Octave/Python numerical comparison and current remaining gaps are documented in
+`../experiments/real_speech/RESULTS.md` and `validation.md`.
+
 The first implementation was not end-to-end validated. This audit found and
 corrected concrete defects; a clean syntax tree must not be described as proof
 that MATLAB numerical results or reports are correct.

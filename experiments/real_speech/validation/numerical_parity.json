@@ -1,0 +1,18 @@
+{
+  "conditions": 48,
+  "metrics_per_condition": 9,
+  "passed": true,
+  "tolerance_absolute": 1e-09,
+  "maximum_absolute_discrepancy": {
+    "nmse": 4.851674617611934e-14,
+    "si_sdr_db": 3.5083047578154947e-13,
+    "short_log_db": 7.069900220812997e-13,
+    "short_convergence": 2.7400304247748863e-13,
+    "medium_log_db": 7.531752999057062e-13,
+    "medium_convergence": 2.0339285811132868e-13,
+    "long_log_db": 7.904787935331115e-13,
+    "long_convergence": 1.5065726444163374e-13,
+    "mr_error": 1.0491607582707729e-13
+  },
+  "compared_runtimes": "Python/SciPy and exact repository .m functions executed by GNU Octave; NOT MATLAB"
+}

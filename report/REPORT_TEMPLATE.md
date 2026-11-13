@@ -107,9 +107,13 @@ the full research plan from actual execution.]
 
 ## 4. Results
 
-No real speech comparison results currently exist in the repository. The four
-passing Python integration tests validate preparation/codec round trips on
-synthetic input; they do not answer the speech-quality research question.
+Actual real-speech results are now recorded in
+`experiments/real_speech/RESULTS.md` and its CSVs/figures. They were computed
+in Python/SciPy/pystoi, with exact `.m` core-function cross-checks under GNU
+Octave. Do not relabel them as native MATLAB results. Integrate the observed
+data, rate/band sensitivity controls and limitations into the final narrative;
+the template itself is not a completed report. Synthetic unit tests remain
+software validation rather than codec-quality research evidence.
 
 ### 4.1 Software validation
 

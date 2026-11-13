@@ -1,0 +1,10 @@
+test_fft_and_frame_times_match_scipy (test_analysis.AnalysisTests.test_fft_and_frame_times_match_scipy) ... ok
+test_hash_tampering_rejected (test_analysis.AnalysisTests.test_hash_tampering_rejected) ... ok
+test_spectral_gain_has_known_error (test_analysis.AnalysisTests.test_spectral_gain_has_known_error) ... ok
+test_stoi_identity (test_analysis.AnalysisTests.test_stoi_identity) ... ok
+test_waveform_metrics_have_analytic_values (test_analysis.AnalysisTests.test_waveform_metrics_have_analytic_values) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.057s
+
+OK

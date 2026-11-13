@@ -1,0 +1,16 @@
+{
+  "corpus": "LibriSpeech dev-clean",
+  "url": "https://www.openslr.org/resources/12/dev-clean.tar.gz",
+  "archive_md5": "42e2234ba48799c1f50f24a7926300a1",
+  "selection_rule": "First 3 numerically sorted eligible speaker IDs per corpus F/M label; first 2 files in archive order of duration 4\u201310 s per speaker. No codec outcome used.",
+  "utterances": 12,
+  "speakers": [
+    "84",
+    "1462",
+    "1673",
+    "174",
+    "251",
+    "422"
+  ],
+  "total_seconds": 82.33
+}
