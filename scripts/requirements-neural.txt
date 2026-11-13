@@ -1,0 +1,4 @@
+# Optional CPU reference environment; install matching PyTorch wheels first.
+torch==2.5.1
+torchaudio==2.5.1
+encodec==0.1.1

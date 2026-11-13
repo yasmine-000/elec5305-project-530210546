@@ -1,0 +1,6 @@
+data/*
+!data/README.md
+results/
+.venv/
+__pycache__/
+*.asv
